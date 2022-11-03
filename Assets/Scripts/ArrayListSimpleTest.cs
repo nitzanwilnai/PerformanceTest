@@ -11,7 +11,8 @@ public class ArrayListSimpleTest : MonoBehaviour
     void Start()
     {
         //arrayListTest();
-        TestBranchPred(1);
+        //TestBranchPred();
+        TestBranchPredOrig();
     }
 
     void arrayListTest()
@@ -52,8 +53,53 @@ public class ArrayListSimpleTest : MonoBehaviour
         ResultText.text += testTime2 + " List\n";
     }
 
+    void TestBranchPred()
+    {
+        ResultText.text = "Branch prediction Test\n";
+        TestBranchPred1();
+        TestBranchPred2();
+    }
 
-    void TestBranchPred(int value)
+
+    void TestBranchPred1()
+    {
+        int numIterations = 10000000;
+        int testInt1 = 0;
+        int testInt2 = 0;
+        float testTime1 = 0.0f;
+        float time1 = Time.realtimeSinceStartup;
+        for (int i = 0; i < numIterations; i++)
+        {
+            testInt1++;
+            testInt2++;
+        }
+        testTime1 += Time.realtimeSinceStartup - time1;
+        Debug.Log(testTime1 + " no branch");
+        ResultText.text += testTime1 + " no branch\n";
+    }
+
+    void TestBranchPred2()
+    {
+        int numIterations = 10000000;
+        int testInt1 = 0;
+        int testInt2 = 0;
+        float testTime2 = 0.0f;
+        float time2 = Time.realtimeSinceStartup;
+        for (int i = 0; i < numIterations; i++)
+        {
+            testInt1++;
+            if (testInt1 > 100)
+            {
+                testInt2++;
+            }
+        }
+        testTime2 += Time.realtimeSinceStartup - time2;
+        Debug.Log(testTime2 + " with branch");
+        ResultText.text += testTime2 + " with branch\n";
+    }
+
+
+    void TestBranchPredOrig()
     {
         ResultText.text = "Branch prediction Test\n";
         int numIterations = 10000000;
@@ -61,21 +107,22 @@ public class ArrayListSimpleTest : MonoBehaviour
         int testInt2 = 0;
         float testTime1 = 0.0f;
         float testTime2 = 0.0f;
+        float time1 = Time.realtimeSinceStartup;
         for (int i = 0; i < numIterations; i++)
         {
-            float time1 = Time.realtimeSinceStartup;
             testInt1++;
+        }
+        testTime1 = Time.realtimeSinceStartup - time1;
 
-            testTime1 += Time.realtimeSinceStartup - time1;
-            float time2 = Time.realtimeSinceStartup;
-            if (value > 0)
+        float time2 = Time.realtimeSinceStartup;
+        for (int i = 0; i < numIterations; i++)
+        {
+            if (i < numIterations)
             {
                 testInt2++;
             }
-
-
-            testTime2 += Time.realtimeSinceStartup - time2;
         }
+        testTime2 = Time.realtimeSinceStartup - time2;
         Debug.Log(testTime1 + " no branch");
         ResultText.text += testTime1 + " no branch\n";
         Debug.Log(testTime2 + " with branch");
