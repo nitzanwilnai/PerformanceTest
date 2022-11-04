@@ -3,6 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Runtime.InteropServices;
+
+[StructLayout(LayoutKind.Sequential, Pack = 0)]
+public class IntObject
+{
+    public int A;
+    public int B;
+    public int C;
+    public int D;
+    public int E;
+    public int F;
+    public int G;
+    public int H;
+    public int I;
+    public int J;
+    public int K;
+    public int L;
+    public int M;
+    public int N;
+    public int O;
+    public int P;
+
+    public int A2;
+    public int B2;
+    public int C2;
+    public int D2;
+    public int E2;
+    public int F2;
+    public int G2;
+    public int H2;
+    public int I2;
+    public int J2;
+    public int K2;
+    public int L2;
+    public int M2;
+    public int N2;
+    public int O2;
+    public int P2;
+}
+
+public class ArrayOfIntObjects
+{
+    public IntObject[] IntObjects;
+
+    public ArrayOfIntObjects()
+    {
+        IntObjects = new IntObject[1024];
+        for (int i = 0; i < 1024; i++)
+            IntObjects[i] = new IntObject();
+    }
+}
 
 public class MyArray
 {
@@ -83,6 +134,7 @@ public class CacheTest : MonoBehaviour
     MyArrayGetSet myArrayGetSet = new MyArrayGetSet();
     SafeArray safeArray = new SafeArray();
     UnsafeArray unsafeArray = new UnsafeArray();
+    ArrayOfIntObjects arrayOfIntObjects = new ArrayOfIntObjects();
 
     // Start is called before the first frame update
     void Start()
@@ -112,6 +164,8 @@ public class CacheTest : MonoBehaviour
         double timer6 = 0.0f;
         double timer7 = 0.0f;
         double timer8 = 0.0f;
+        double timer9 = 0.0f;
+        double timer10 = 0.0f;
         double time = 0.0f;
 
         for (int j = 0; j < SIZE; j++)
@@ -124,6 +178,7 @@ public class CacheTest : MonoBehaviour
             safeArray[j] = j;
             unsafeArray[j] = j;
             list.Add(j);
+            arrayOfIntObjects.IntObjects[j].A = j;
         }
 
         for (int i = 0; i < numIterations; i++)
@@ -167,6 +222,17 @@ public class CacheTest : MonoBehaviour
             for (int j = 0; j < SIZE; j++)
                 list[j]++;
             timer8 += Time.realtimeSinceStartupAsDouble - time;
+
+            time = Time.realtimeSinceStartupAsDouble;
+            for (int j = 0; j < SIZE; j++)
+                arrayOfIntObjects.IntObjects[j].A++;
+            timer9 += Time.realtimeSinceStartupAsDouble - time;
+
+            time = Time.realtimeSinceStartupAsDouble;
+            for (int j = 0; j < SIZE; j++)
+                if(j < SIZE)
+                    arrayOfIntObjects.IntObjects[j].A++;
+            timer10 += Time.realtimeSinceStartupAsDouble - time;
         }
 
         ResultText.text += "Local Array " + timer1.ToString("N4") + "\n";
@@ -177,6 +243,8 @@ public class CacheTest : MonoBehaviour
         ResultText.text += "UnSafe Member Array " + timer6.ToString("N4") + "\n";
         ResultText.text += "Object Member Array GetSet " + timer7.ToString("N4") + "\n";
         ResultText.text += "List " + timer8.ToString("N4") + "\n";
+        ResultText.text += "Array of Int Objects " + timer9.ToString("N4") + "\n";
+        ResultText.text += "Array of Int Objects with Branch " + timer10.ToString("N4") + "\n";
     }
 
     void TestMember()
